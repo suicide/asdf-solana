@@ -41,8 +41,10 @@ download_release() {
 	version="$1"
 	filename="$2"
 
-	# TODO: Adapt the release URL convention for solana
-	url="$GH_REPO/archive/v${version}.tar.gz"
+	# example: https://github.com/anza-xyz/agave/releases/download/v1.18.26/solana-release-x86_64-unknown-linux-gnu.tar.bz2
+	url="$GH_REPO/releases/download/v${version}/solana-release-x86_64-unknown-linux-gnu.tar.bz2"
+
+	echo "$url"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -59,7 +61,8 @@ install_version() {
 
 	(
 		mkdir -p "$install_path"
-		cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
+		# grab the bin/ dir from within the package
+		cp -r "$ASDF_DOWNLOAD_PATH"/bin/* "$install_path"
 
 		# TODO: Assert solana executable exists.
 		local tool_cmd
